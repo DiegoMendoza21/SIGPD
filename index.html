@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SIGPD - Sistema de Información para la Gestión de Proyectos Docentes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <img src="SIGPD.png" alt="Logo SIGPD" style="max-width: 150px; display: block; margin: 0 auto;" />
+<h1>SIGPD</h1>
+    <p><strong>Usuario:</strong> <span id="active-user">Invitado</span></p>
+
+    <div id="login-form" class="login">
+      <input type="text" id="username" placeholder="Usuario" />
+      <select id="role">
+        <option value="docente">Docente</option>
+        <option value="coordinador">Coordinador</option>
+        <option value="admin">Administrador</option>
+      </select>
+      <button onclick="login()">Iniciar Sesión</button>
+    </div>
+
+    <form id="project-form" class="hidden">
+      <input type="text" id="title" placeholder="Título del proyecto" required />
+      <input type="text" id="coordinator" placeholder="Coordinador" required />
+      <textarea id="objective" placeholder="Objetivo del proyecto" required></textarea>
+      <input type="number" id="progress" placeholder="Avance (%)" min="0" max="100" />
+      <select id="status">
+        <option>En planificación</option>
+        <option>En ejecución</option>
+        <option>Finalizado</option>
+      </select>
+      <button type="submit">Agregar Proyecto</button>
+    </form>
+
+    <div id="project-list" class="project-list"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
