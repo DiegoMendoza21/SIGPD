@@ -9,8 +9,9 @@
 <body>
   <div class="container">
     <img src="SIGPD.png" alt="Logo SIGPD" style="max-width: 150px; display: block; margin: 0 auto;" />
-<h1>SIGPD</h1>
+    <h1>SIGPD - Sistema de Información para la Gestión de Proyectos Docentes</h1>
     <p><strong>Usuario:</strong> <span id="active-user">Invitado</span></p>
+    <button id="logout-btn" class="hidden" onclick="logout()">Cerrar sesión</button>
 
     <div id="login-form" class="login">
       <input type="text" id="username" placeholder="Usuario" />
@@ -22,7 +23,9 @@
       <button onclick="login()">Iniciar Sesión</button>
     </div>
 
-    <form id="project-form" class="hidden">
+    <form id="project-form" class="hidden" enctype="multipart/form-data">
+      <label>Documento del proyecto (Excel):</label>
+      <input type="file" id="projectFile" accept=".xls,.xlsx" />
       <input type="text" id="title" placeholder="Título del proyecto" required />
       <input type="text" id="coordinator" placeholder="Coordinador" required />
       <textarea id="objective" placeholder="Objetivo del proyecto" required></textarea>
