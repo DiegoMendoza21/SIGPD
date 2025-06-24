@@ -1,6 +1,5 @@
-let projects = [];
-let editingIndex = null;
-let currentUser = { name: "Invitado", role: "guest" };
+let projects = JSON.parse(localStorage.getItem("projects")) || [];
+let currentUser = JSON.parse(localStorage.getItem("currentUser")) || { name: "Invitado", role: "guest" };
 
 const form = document.getElementById('project-form');
 const titleInput = document.getElementById('title');
@@ -15,8 +14,10 @@ function login() {
   const username = document.getElementById('username').value || "Anónimo";
   const role = document.getElementById('role').value;
   currentUser = { name: username, role };
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
   activeUserDisplay.textContent = username + " (" + role + ")";
   document.getElementById('login-form').classList.add('hidden');
+  document.getElementById("logout-btn").classList.remove("hidden");
   if (role === "docente" || role === "admin") {
     form.classList.remove('hidden');
   }
@@ -25,6 +26,9 @@ function login() {
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
+  const fileInput = document.getElementById('projectFile');
+  const fileName = fileInput && fileInput.files.length > 0 ? fileInput.files[0].name : "Sin documento";
+
   const newProject = {
     title: titleInput.value,
     coordinator: coordinatorInput.value,
@@ -32,7 +36,8 @@ form.addEventListener('submit', function (e) {
     progress: progressInput.value,
     status: statusInput.value,
     state: "Pendiente",
-    author: currentUser.name
+    author: currentUser.name,
+    documento: fileName
   };
 
   if (editingIndex !== null) {
@@ -43,6 +48,7 @@ form.addEventListener('submit', function (e) {
     projects.push(newProject);
   }
 
+  saveProjects();
   form.reset();
   renderProjects();
 });
@@ -69,6 +75,7 @@ function renderProjects() {
       <p><strong>Estado:</strong> ${project.status}</p>
       <p><strong>Estado de aprobación:</strong> ${project.state}</p>
       <p><strong>Autor:</strong> ${project.author}</p>
+      <p><strong>Documento:</strong> ${project.documento}</p>
       <div class="actions">
         ${(currentUser.role === "docente" || currentUser.role === "admin") ?
           `<button onclick="editProject(${index})">Editar</button>
@@ -80,6 +87,16 @@ function renderProjects() {
     `;
     projectList.appendChild(card);
   });
+}
+
+function logout() {
+  currentUser = { name: "Invitado", role: "guest" };
+  localStorage.removeItem("currentUser");
+  activeUserDisplay.textContent = "Invitado";
+  document.getElementById("login-form").classList.remove("hidden");
+  form.classList.add("hidden");
+  document.getElementById("logout-btn").classList.add("hidden");
+  projectList.innerHTML = '';
 }
 
 function editProject(index) {
@@ -95,15 +112,25 @@ function editProject(index) {
 
 function deleteProject(index) {
   projects.splice(index, 1);
+  saveProjects();
   renderProjects();
 }
 
 function approveProject(index) {
   projects[index].state = "Aprobado";
+  saveProjects();
   renderProjects();
 }
 
 function rejectProject(index) {
   projects[index].state = "Rechazado";
+  saveProjects();
   renderProjects();
 }
+
+function saveProjects() {
+  localStorage.setItem("projects", JSON.stringify(projects));
+}
+
+let editingIndex = null;
+renderProjects();
